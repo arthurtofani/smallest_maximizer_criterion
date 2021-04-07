@@ -99,7 +99,7 @@ Run the command:
 
 ## Package description
 
-Below a brief description of the files
+Below a brief description of the most important files of this repo:
 
 ```
 ├── examples							- Simulation and Linguistic Case Study examples
