@@ -72,6 +72,66 @@ Generate a sample from the model
 `python sample_gen.py -t ../lorem_ipsum.tree  -s 5000 ../lipsum_sample.txt`
 
 
+## Running the examples
+
+### Simulation
+
+Enter the examples folder
+
+`cd examples`
+
+Run the command:
+
+`python examples/simulation_study.py`
+
+
+### Linguistic case study
+
+Enter the examples folder
+
+`cd examples`
+
+Run the command:
+
+`python examples/linguistic_case_study.py`
+
+
+
+## Package description
+
+Below a brief description of the files
+
+```
+├── examples							- Simulation and Linguistic Case Study examples
+├── fixtures							- Auxiliary static files
+├── tests								- Tests
+├── g4l 								- The main package folder
+│   ├── bic.py 								- Main code for CTM/BIC procedure
+│   ├── bootstrap.py 						- Bootstrap main class
+│   ├── context_tree.py 					- Tree initialization and persistence
+│   ├── display.py 							- Graphic visualization methods
+│   ├── resampling.py 						- Block resampling methods used for bootstrap
+│   ├── sample.py 							- Samples handler class
+│   ├── tree_tables.py 						- Methods for computing node freqs and transitions
+│   ├── smc_base.py 						- Base class for SMC
+│   ├── smc_bic.py 							- SMC using BIC
+│   ├── smc_lcb.py 							- SMC using alternative pruning strategy
+│   ├── reports 							- Template files for HTML reports
+│   ├── estimators 							- Auxiliary files for the estimators
+│   └── util 							- Other libraries used in the project
+│       ├── caching 						- Methods for cache management
+│       ├── command_line_methods.py 		- Command-line parameters (argparser)
+│       ├── degrees_of_freedom.py 			- Degree of freedom versions
+│       ├── integrity.py 					- Methods for testing model consistence/integrity
+│       ├── parallel.py 					- Methods that run in parallel
+│       ├── persistence.py 					- Methods for loading and saving models
+│       └── stats.py 						- t-test method
+├── smc.py 								- main script for estimating models using SMC
+├── ctm.py 								- main script for estimating models using CTM
+├── sample_gen.py 						- script for generating samples from a saved model
+
+```
+
 ## References
 
 <a id="1">[1]</a>
