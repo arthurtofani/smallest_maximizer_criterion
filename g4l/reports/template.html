@@ -22,7 +22,7 @@
         <!--h4 class='card-title'>Champion trees</h4-->
         <div class='card-text'>
           <div class="row">
-            <div class="col-2">
+            <div class="col-2 scrollable">
               <h6># contexts</h6>
               <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
@@ -36,7 +36,7 @@
                   {% endif %}
                   <a class="nav-link {{act}}" id="v-pills-tree-{{tree.num_contexts}}-tab" data-toggle="pill" href="#v-pills-tree-{{tree.num_contexts}}" role="tab" aria-controls="v-pills-tree-{{tree.num_contexts}}" aria-selected="{{ar}}">{{tree.num_contexts}}
                   {% if tree.optimal %}
-                    <span class="badge badge-success">Optimal</span>
+                    <span class="badge badge-success" style='float-right'>Optimal</span>
                   {% endif %}
                   </a>
                 {% endfor -%}
@@ -94,7 +94,7 @@
                     </div>
 
 
-                    <div class="tab-pane fade" id="nav-transitions-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="nav-transitions-{{tree.num_contexts}}-tab">
+                    <div class="tab-pane fade scrollable" id="nav-transitions-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="nav-transitions-{{tree.num_contexts}}-tab">
 
                       <table class='table'>
 
@@ -115,10 +115,10 @@
                       </table>
 
                     </div>
-                    <div class="tab-pane fade" id="nav-contact-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="nav-contact-{{tree.num_contexts}}-tab">
+                    <div class="tab-pane fade scrollable" id="nav-contact-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="nav-contact-{{tree.num_contexts}}-tab">
 
 
-                      <table class='table'>
+                      <table class='table scrollable'>
 
                         <tr>
                           <th>Node</th>
@@ -197,18 +197,18 @@
               <table class='table'>
                 <tr>
                   <th>Alphabet size</th>
-                  <td>5</td>
+                  <td>2</td>
                 </tr>
                 <tr>
                   <th>Length:</th>
-                  <td>65903</td>
+                  <td>5000</td>
                 </tr>
-                <tr>
+                <!--tr>
                   <th>Filename:</th>
                   <td>
                     <a href='file:///home/arthur/Documents/Neuromat/projects/SMC/results/python/ep/sample.txt', target='blank'>View</a>
                   </td>
-                </tr>
+                </tr-->
               </table>
             </div>
 
@@ -228,7 +228,7 @@
       <div class='card-body'>
         <div class='card-text text-center'>
 
-          <img src='images/L.png' class="img-fluid"/>
+          <img src='reports/images/L.png' class="img-fluid"/>
 
         </div>
       </div>
@@ -236,7 +236,15 @@
 
 
   </div>
-
+<style>
+  .card {
+    font-size: 0.9em;
+  }
+  .scrollable {
+    overflow-y: scroll;
+    max-height: 400px;
+  }
+</style>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

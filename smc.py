@@ -57,7 +57,7 @@ import os
 import logging
 from g4l.bootstrap import Bootstrap
 from g4l.sample import Sample
-from g4l.util.command_line_methods import smc_argparser, set_log
+from g4l.util.command_line_methods import smc_argparser, set_log, get_renewal_point
 
 
 def print_champion_trees(meth):
@@ -76,7 +76,8 @@ def run_smc_bic(X):
     if args.num_cores > 1:
         num_cores = args.num_cores
 
-    bootstrap = Bootstrap(args.folder, args.resamples, args.renewal_point)
+    renewal_point = get_renewal_point(X, args)
+    bootstrap = Bootstrap(args.folder, args.resamples, renewal_point)
     smc = SMC(bootstrap,
               penalty_interval=tuple(args.penalty_interval),
               cache_dir=args.folder,
@@ -96,7 +97,8 @@ def run_smc_lcb(X):
     if args.num_cores > 1:
         num_cores = args.num_cores
 
-    bootstrap = Bootstrap(args.folder, args.resamples, args.renewal_point)
+    renewal_point = get_renewal_point(X, args)
+    bootstrap = Bootstrap(args.folder, args.resamples, renewal_point)
     smc = SMC(bootstrap,
               cache_dir=args.folder,
               n_sizes=args.n_sizes,

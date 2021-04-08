@@ -20,18 +20,6 @@ def node_transitions(tree, contexts_only=False):
     return pd.DataFrame(dfx.to_records()).set_index('node')
 
 
-def log_likelihood_per_leaves(smc_instances, labels):   # pragma: no cover
-    plt.figure(figsize=(14, 6))
-    for idx, instance in enumerate(smc_instances):
-        ll = [x.log_likelihood() for x in instance.champion_trees]
-        num_contexts = [len(x.leaves()) for x in instance.champion_trees]
-        label = labels[idx]
-        plt.plot(num_contexts, ll, marker='o', linewidth=1, label=label)
-    plt.title("BP/EP Log-likelihood functions")
-    plt.grid()
-    plt.legend()
-
-
 def plot2(tree, column_label='symbol', font_size=10,
           label_offset_x=-14,
           label_offset_y=10,
