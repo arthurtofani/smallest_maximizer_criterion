@@ -22,6 +22,7 @@ class SmcReport:
         os.makedirs(os.path.join(self.reports_folder, 'tables'), exist_ok=True)
 
     def create_summary(self, smc_instance, sample, args=None):
+        logging.info("Generating report")
         self.create_folders()
         d = dict()
         d['max_depth'] = sample.max_depth
@@ -56,6 +57,12 @@ class SmcReport:
                   'log_likelihood': str(round(t.log_likelihood(), 5))}
             d['trees'].append(el)
         d['trees'] = list(reversed(d['trees']))
+        t0 = smc_instance.context_trees[0]
+        import code; code.interact(local=dict(globals(), **locals()))
+        trans_tbl = node_transitions(t0).reset_index(drop=False)
+        d['nodes_table'] = json.loads(t0.df.to_json(orient='records', double_precision=3))
+        d['freqs_table'] = json.loads(trans_tbl.to_json(orient='records', double_precision=3))
+        #import code; code.interact(local=dict(globals(), **locals()))
         with open(os.path.join(self.folder, 'smc.json'), 'w') as file:
             json.dump(d, file)
 
@@ -79,9 +86,9 @@ class SmcReport:
 
     def draw_likelihoods(self, filename=None):
         fig = plt.figure(figsize=(15, 4))
-        likelihoods = [t.log_likelihood() for t in reversed(self.champion_trees)]
+        L = [t.log_likelihood() for t in reversed(self.champion_trees)]
         num_contexts = [t.num_contexts() for t in reversed(self.champion_trees)]
-        plt.plot(num_contexts, likelihoods, '.', label="Champion trees")
+        plt.plot(num_contexts, L, '.', label="Champion trees")
         plt.plot([self.optimal_tree().num_contexts()], [self.optimal_tree().log_likelihood()], 'o', color='red',  label="Optimal tree")
         plt.legend()
         if filename is not None:
@@ -96,6 +103,7 @@ class SmcReport:
         self.fill_template()
 
     def fill_template(self):
+        return
         template_path = os.path.dirname(os.path.realpath(__file__))
         templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
         templateEnv = jinja2.Environment(loader=templateLoader)
@@ -106,24 +114,30 @@ class SmcReport:
                                      nodes=nodes,
                                      transition_keys=list(tr_keys),
                                      transitions=transitions)
+
         html_file = os.path.join(self.folder, 'report.html')
         with open(html_file, 'w') as file:
             file.write(outputText + '\n')
         logging.info("Report generated at %s" % html_file)
+
 
     def create_tables(self):
         nodes = []
         transitions = []
         for i, t in enumerate(self.champion_trees):
             try:
-                dfx = t.df[['node', 'freq', 'active', 'likelihood_pen', 'v_node', 'v_node_sum', 'indicator']]
+                dfx = t.df[['node', 'freq', 'likelihood_pen', 'v_node', 'v_node_sum']]
+                dfx['likelihood_pen'] = dfx.likelihood_pen.round(3)
+                dfx['v_node'] = dfx.v_node.round(3)
+                dfx['v_node_sum'] = dfx.v_node_sum.round(3)
             except:
                 t.df['likelihood_pen'] = ''
                 t.df['v_node'] = ''
                 t.df['v_node_sum'] = ''
                 t.df['indicator'] = ''
-                dfx = t.df[['node', 'freq', 'active', 'likelihood_pen', 'v_node', 'v_node_sum', 'indicator']]
-            transitions.append(list(node_transitions(t).reset_index().T.to_dict().values()))
+                dfx = t.df[['node', 'freq', 'likelihood_pen', 'v_node', 'v_node_sum']]
+            ct = list(node_transitions(t).reset_index().T.to_dict().values())
+            transitions.append(ct)
             ns = list(dfx.T.to_dict().values())
             nodes.append(sorted(ns, key=lambda k: k['node'][::-1]))
         return nodes, transitions
@@ -139,6 +153,8 @@ class SmcReport:
                                filename=img_file)
             except:
                 pass
+        self.draw_likelihoods(filename=os.path.join(img_fld, 'L.png'))
+
 
     def load_summary(self):
         with open(os.path.join(self.folder, 'smc.json'), 'r') as file:

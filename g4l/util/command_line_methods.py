@@ -130,6 +130,16 @@ def keep(args):
     return keep
 
 
+def get_renewal_point(X, args):
+    if args.renewal_point is None:
+        from g4l.util import renewal_point as rp
+        renewal_point = rp.max_depth_and_freq(X, args)
+        logging.warning("Using '%s' as renewal point" % renewal_point)
+    else:
+        renewal_point = args.renewal_point
+    return renewal_point
+
+
 def smc_argparser():  # pragma: no cover
     parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser(description='Estimates context tree')
@@ -153,7 +163,6 @@ def smc_argparser():  # pragma: no cover
                             type=float,
                             default='0.01',
                             help='Alpha value for t-test')
-
 
     parser_bic.add_argument('-S', '--n_sizes',
                             nargs=2,
