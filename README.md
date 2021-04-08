@@ -1,8 +1,8 @@
 # Smallest Maximizer Criterion
 
-This algorithm implements the Smallest Maximizer Criterion, a consistent and constant free model selection procedure in the class of variable length Markov chains (VLMC), presented originally in the paper **Context tree selection and linguistic rhythm retrieval from written texts** (Galves et al., 2012)[[1]](#1).
+This algorithm implements the Smallest Maximizer Criterion, a consistent and constant free model selection procedure in the class of variable length Markov chains (VLMC), presented originally in the paper **Context tree selection and linguistic rhythm retrieval from written texts** (Galves et al., 2012) [[1]](#1).
 
-The package also provides an implementation of the Context Tree Maximizer (CTM) algorithm, which estimates context tree models consistently in linear time using the Bayesian Information Criteria (BIC) [[2]](#2). This approach relies on the specification of a constant, whereas its choice results on the estimation of different models. The SMC algorithm, in turn, is a constant-free procedure: given a list of consistent candidate models (__champion trees__), the procedure selects the smallest model that maximizes the likelihood of a sample. Two methods are available in the package for performing the champion trees set selection. The first method uses the CTM algorithm as presented in [[1]](#1), where the candidate models are located by scanning the model space for different constant values, and this method is proven to be consistent. The second method composes the set of champion trees by starting from the full tree, moving towards the empty tree by iteratively pruning the least contributive branches (LCB).
+The package also provides an implementation of the Context Tree Maximizer (CTM) algorithm, which estimates context tree models consistently in linear time using the Bayesian Information Criteria (BIC) [[2]](#2). This approach relies on the specification of a constant, whereas its choice results on the estimation of different models. The SMC algorithm, in turn, is a constant-free procedure: given a list of consistent candidate models (*champion trees*), the procedure selects the smallest model that maximizes the likelihood of a sample. Two methods are available in the package for performing the champion trees set selection. The first method uses the CTM algorithm as presented in [[1]](#1), where the candidate models are located by scanning the model space for different constant values, and this method is proven to be consistent. The second method composes the set of champion trees by starting from the full tree, moving towards the empty tree by iteratively pruning the least contributive branches (LCB).
 
 ## Requirements
 
@@ -71,6 +71,66 @@ Generate a sample from the model
 
 `python sample_gen.py -t ../lorem_ipsum.tree  -s 5000 ../lipsum_sample.txt`
 
+
+## Running the examples
+
+### Simulation
+
+Enter the examples folder
+
+`cd examples`
+
+Run the command:
+
+`python examples/simulation_study.py`
+
+
+### Linguistic case study
+
+Enter the examples folder
+
+`cd examples`
+
+Run the command:
+
+`python examples/linguistic_case_study.py`
+
+
+
+## Package description
+
+Below a brief description of the most important files of this repo:
+
+```
+├── examples							- Simulation and Linguistic Case Study examples
+├── fixtures							- Auxiliary static files
+├── tests								- Tests
+├── g4l 								- The main package folder
+│   ├── bic.py 								- Main code for CTM/BIC procedure
+│   ├── bootstrap.py 						- Bootstrap main class
+│   ├── context_tree.py 					- Tree initialization and persistence
+│   ├── display.py 							- Graphic visualization methods
+│   ├── resampling.py 						- Block resampling methods used for bootstrap
+│   ├── sample.py 							- Samples handler class
+│   ├── tree_tables.py 						- Methods for computing node freqs and transitions
+│   ├── smc_base.py 						- Base class for SMC
+│   ├── smc_bic.py 							- SMC using BIC
+│   ├── smc_lcb.py 							- SMC using alternative pruning strategy
+│   ├── reports 							- Template files for HTML reports
+│   ├── estimators 							- Auxiliary files for the estimators
+│   └── util 							- Other libraries used in the project
+│       ├── caching 						- Methods for cache management
+│       ├── command_line_methods.py 		- Command-line parameters (argparser)
+│       ├── degrees_of_freedom.py 			- Degree of freedom versions
+│       ├── integrity.py 					- Methods for testing model consistence/integrity
+│       ├── parallel.py 					- Methods that run in parallel
+│       ├── persistence.py 					- Methods for loading and saving models
+│       └── stats.py 						- t-test method
+├── smc.py 								- main script for estimating models using SMC
+├── ctm.py 								- main script for estimating models using CTM
+├── sample_gen.py 						- script for generating samples from a saved model
+
+```
 
 ## References
 
