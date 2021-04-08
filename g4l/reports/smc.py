@@ -58,7 +58,6 @@ class SmcReport:
             d['trees'].append(el)
         d['trees'] = list(reversed(d['trees']))
         t0 = smc_instance.context_trees[0]
-        import code; code.interact(local=dict(globals(), **locals()))
         trans_tbl = node_transitions(t0).reset_index(drop=False)
         d['nodes_table'] = json.loads(t0.df.to_json(orient='records', double_precision=3))
         d['freqs_table'] = json.loads(trans_tbl.to_json(orient='records', double_precision=3))
@@ -103,15 +102,16 @@ class SmcReport:
         self.fill_template()
 
     def fill_template(self):
-        return
+        #return
         template_path = os.path.dirname(os.path.realpath(__file__))
         templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
         templateEnv = jinja2.Environment(loader=templateLoader)
         template = templateEnv.get_template("template.html")
         nodes, transitions = self.create_tables()
         tr_keys = transitions[0][0].keys()
+        #import code; code.interact(local=dict(globals(), **locals()))
         outputText = template.render(data=self.summary,
-                                     nodes=nodes,
+                                     nodes=list(reversed(nodes)),
                                      transition_keys=list(tr_keys),
                                      transitions=transitions)
 
@@ -126,7 +126,7 @@ class SmcReport:
         transitions = []
         for i, t in enumerate(self.champion_trees):
             try:
-                dfx = t.df[['node', 'freq', 'likelihood_pen', 'v_node', 'v_node_sum']]
+                dfx = t.df[['node', 'freq', 'likelihood_pen', 'v_node', 'v_node_sum', 'active', 'indicator']]
                 dfx['likelihood_pen'] = dfx.likelihood_pen.round(3)
                 dfx['v_node'] = dfx.v_node.round(3)
                 dfx['v_node_sum'] = dfx.v_node_sum.round(3)
@@ -135,7 +135,8 @@ class SmcReport:
                 t.df['v_node'] = ''
                 t.df['v_node_sum'] = ''
                 t.df['indicator'] = ''
-                dfx = t.df[['node', 'freq', 'likelihood_pen', 'v_node', 'v_node_sum']]
+                dfx = t.df[['node', 'freq', 'likelihood_pen', 'v_node', 'v_node_sum', 'active', 'indicator']]
+            #import code; code.interact(local=dict(globals(), **locals()))
             ct = list(node_transitions(t).reset_index().T.to_dict().values())
             transitions.append(ct)
             ns = list(dfx.T.to_dict().values())

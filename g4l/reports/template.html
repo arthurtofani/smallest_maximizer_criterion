@@ -22,7 +22,7 @@
         <!--h4 class='card-title'>Champion trees</h4-->
         <div class='card-text'>
           <div class="row">
-            <div class="col-2">
+            <div class="col-2 scrollable">
               <h6># contexts</h6>
               <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
@@ -34,9 +34,9 @@
                       {% set act = 'active' %}
                       {% set ar = 'true' %}
                   {% endif %}
-                  <a class="nav-link {{act}}" id="v-pills-tree-tab" data-toggle="pill" href="#v-pills-tree" role="tab" aria-controls="v-pills-tree" aria-selected="{{ar}}">{{tree.num_contexts}}
+                  <a class="nav-link {{act}}" id="v-pills-tree-{{tree.num_contexts}}-tab" data-toggle="pill" href="#v-pills-tree-{{tree.num_contexts}}" role="tab" aria-controls="v-pills-tree-{{tree.num_contexts}}" aria-selected="{{ar}}">{{tree.num_contexts}}
                   {% if tree.optimal %}
-                    <span class="badge badge-success">Optimal</span>
+                    <span class="badge badge-success" style='float-right'>Optimal</span>
                   {% endif %}
                   </a>
                 {% endfor -%}
@@ -49,29 +49,30 @@
               <div class="tab-content" id="v-pills-tabContent">
 
 
-                {% set tree = data.trees[0] %}
+                {% for i in range(data.trees | length ) -%}
+                  {% set tree = data.trees[i] %}
+                  {% set act = '' %}
+                  {% if tree.optimal %}
+                      {% set act = 'show active' %}
+                  {% endif %}
 
-
-                <div class="tab-pane"
-                     id="v-pills-tree"
-                     role="tabpanel"
-                     aria-labelledby="v-pills-tree-tab">
+                <div class="tab-pane fade {{act}}" id="v-pills-tree-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="v-pills-tree-{{tree.num_contexts}}-tab">
 
                   <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
 
-                      <a class="nav-item nav-link active" id="nav-tree-tab" data-toggle="tab" href="#nav-tree" role="tab" aria-controls="nav-tree" aria-selected="true">Tree</a>
+                      <a class="nav-item nav-link active" id="nav-tree-{{tree.num_contexts}}-tab" data-toggle="tab" href="#nav-tree-{{tree.num_contexts}}" role="tab" aria-controls="nav-tree-{{tree.num_contexts}}" aria-selected="true">Tree</a>
 
 
-                      <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Nodes</a>
+                      <a class="nav-item nav-link" id="nav-contact-{{tree.num_contexts}}-tab" data-toggle="tab" href="#nav-contact-{{tree.num_contexts}}" role="tab" aria-controls="nav-contact-{{tree.num_contexts}}" aria-selected="false">Nodes</a>
 
 
-                      <a class="nav-item nav-link" id="nav-transitions-tab" data-toggle="tab" href="#nav-transitions" role="tab" aria-controls="nav-transitions" aria-selected="false">Transition probabilities</a>
+                      <a class="nav-item nav-link" id="nav-transitions-{{tree.num_contexts}}-tab" data-toggle="tab" href="#nav-transitions-{{tree.num_contexts}}" role="tab" aria-controls="nav-transitions-{{tree.num_contexts}}" aria-selected="false">Transition probabilities</a>
 
                     </div>
                   </nav>
                   <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-tree" role="tabpanel" aria-labelledby="nav-tree-tab">
+                    <div class="tab-pane fade show active" id="nav-tree-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="nav-tree-{{tree.num_contexts}}-tab">
 
 
 
@@ -93,7 +94,7 @@
                     </div>
 
 
-                    <div class="tab-pane fade" id="nav-transitions" role="tabpanel" aria-labelledby="nav-transitions-tab">
+                    <div class="tab-pane fade scrollable" id="nav-transitions-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="nav-transitions-{{tree.num_contexts}}-tab">
 
                       <table class='table'>
 
@@ -114,10 +115,10 @@
                       </table>
 
                     </div>
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    <div class="tab-pane fade scrollable" id="nav-contact-{{tree.num_contexts}}" role="tabpanel" aria-labelledby="nav-contact-{{tree.num_contexts}}-tab">
 
 
-                      <table class='table'>
+                      <table class='table scrollable'>
 
                         <tr>
                           <th>Node</th>
@@ -129,14 +130,14 @@
                           <th>I</th>
                         </tr>
                         {% for row in nodes[i] -%}
-                        <tr data-node='{{row.node}}' data-tree-idx='{{i}}'>
+                        <tr>
                           <th><code>{{row.node}}</code></th>
                           <td>{{row.freq}}</td>
-                          <td class='row-active active-{{row.active}}'>{{row.active}}</td>
-                          <td>{{ row.likelihood_pen }}</td>
-                          <td>{{ row.v_node }}</td>
-                          <td>{{ row.v_node_sum }}</td>
-                          <td class='row-indicator indicator-{{row.indicator}}'>{{ row.indicator }}</td>
+                          <td class='active-{{row.active}}'>{{row.active}}</td>
+                          <td>{{ "%.4f"|format(row.likelihood_pen) }}</td>
+                          <td>{{ "%.4f"|format(row.v_node) }}</td>
+                          <td>{{ "%.4f"|format(row.v_node_sum) }}</td>
+                          <td class='indicator-{{row.indicator}}'>{{row.indicator}}</td>
                         </tr>
                         {% endfor %}
                       </table>
@@ -146,7 +147,7 @@
                   </div>
 
                 </div>
-
+                {% endfor -%}
 
 
               </div>
@@ -196,18 +197,18 @@
               <table class='table'>
                 <tr>
                   <th>Alphabet size</th>
-                  <td>5</td>
+                  <td>2</td>
                 </tr>
                 <tr>
                   <th>Length:</th>
-                  <td>65903</td>
+                  <td>5000</td>
                 </tr>
-                <tr>
+                <!--tr>
                   <th>Filename:</th>
                   <td>
                     <a href='file:///home/arthur/Documents/Neuromat/projects/SMC/results/python/ep/sample.txt', target='blank'>View</a>
                   </td>
-                </tr>
+                </tr-->
               </table>
             </div>
 
@@ -235,7 +236,15 @@
 
 
   </div>
-
+<style>
+  .card {
+    font-size: 0.9em;
+  }
+  .scrollable {
+    overflow-y: scroll;
+    max-height: 400px;
+  }
+</style>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
