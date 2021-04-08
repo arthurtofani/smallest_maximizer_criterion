@@ -11,7 +11,7 @@ def node_transitions(tree, contexts_only=False):
     if contexts_only:
         tbl = tree.tree()
     nodes = tbl.set_index('node_idx').node
-    dfx = tree.transition_probs.merge(nodes,
+    dfx = tree.transition_probs.merge(nodes[nodes != ''],
                                       right_index=True,
                                       left_index=True)
     dfx = dfx.pivot(index='node',

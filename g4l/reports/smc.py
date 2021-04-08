@@ -109,7 +109,6 @@ class SmcReport:
         template = templateEnv.get_template("template.html")
         nodes, transitions = self.create_tables()
         tr_keys = transitions[0][0].keys()
-        #import code; code.interact(local=dict(globals(), **locals()))
         outputText = template.render(data=self.summary,
                                      nodes=list(reversed(nodes)),
                                      transition_keys=list(tr_keys),
@@ -137,6 +136,7 @@ class SmcReport:
                 t.df['indicator'] = ''
                 dfx = t.df[['node', 'freq', 'likelihood_pen', 'v_node', 'v_node_sum', 'active', 'indicator']]
             #import code; code.interact(local=dict(globals(), **locals()))
+
             ct = list(node_transitions(t).reset_index().T.to_dict().values())
             transitions.append(ct)
             ns = list(dfx.T.to_dict().values())
